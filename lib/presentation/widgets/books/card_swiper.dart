@@ -1,27 +1,28 @@
-import 'package:antio_books/config/provider/book_details_provider.dart';
-import 'package:antio_books/domain/entities/book.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../config/provider/book_details_provider.dart';
+import '../../../config/router/routers.dart';
+import '../../../domain/entities/book.dart';
+
 
 class CardSwiper extends StatelessWidget {
-
-  final List<Book> books;
 
   const CardSwiper({
     super.key, 
     required this.books
   });
 
+  final List<Book> books;
+
   
   @override
   Widget build(BuildContext context) {
 
-    final size = MediaQuery.of(context).size;
-    final bookDetailsProvider = Provider.of<BooksDetailsProvider>(context);
+    final Size size = MediaQuery.of(context).size;
 
     if( books.isEmpty) {
       return SizedBox(
@@ -43,24 +44,19 @@ class CardSwiper extends StatelessWidget {
         itemHeight: size.height * 0.5,
         autoplay: true,
         itemBuilder: ( _ , int index ) {
-          final book = books[index];
-          final id = 'swiper-${ book.isbn13 }';
+          final Book book = books[index];
           return GestureDetector(
-            onTap: () async {
-              await bookDetailsProvider.getBookDetails(book.isbn13);
-              if(context.mounted){
-                GoRouter.of(context).go('/details');
-              }
+            onTap: () {
+              final BooksDetailsProvider booksDetailsProvider = context.read<BooksDetailsProvider>();
+              booksDetailsProvider.bookID = book.isbn13;
+              context.go(Routes.bookDetails);
             },
             child: Hero(
-              tag: id,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: FadeInImage(
-                  placeholder: const AssetImage('assets/no-image.jpg'),
-                  image: CachedNetworkImageProvider( book.image ),
-                  fit: BoxFit.cover,
-                ),
+              tag: 'swiper-${ book.isbn13 }',
+              child: FadeInImage(
+                placeholder: const AssetImage('assets/no-image.jpg'),
+                image: CachedNetworkImageProvider( book.image ),
+                fit: BoxFit.cover,
               ),
             ),
           );

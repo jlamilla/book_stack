@@ -1,19 +1,9 @@
-class BookDetails {
-  final String title;
-  final String subtitle;
-  final String authors;
-  final String publisher;
-  final String isbn13;
-  final String pages;
-  final String year;
-  final String rating;
-  final String desc;
-  final String price;
-  final String image;
-  final String url;
-  final Map<String,String> pdf;
+import 'package:hive_flutter/hive_flutter.dart';
 
-  BookDetails({
+@HiveType(typeId: 0)
+class BookDetails extends HiveObject {
+
+  BookDetails ({
     required this.title,
     required this.subtitle,
     required this.authors,
@@ -44,11 +34,37 @@ class BookDetails {
       image: map['image'] ?? '',
       url: map['url'] ?? '',
       pdf: (map['pdf'] as Map<String, dynamic>?)
-            ?.map<String, String>((key, value) => MapEntry(key, value.toString())) ?? {},
+            ?.map<String, String>((String key, dynamic value) => MapEntry<String, String>(key, value.toString())) ?? <String, String>{},
     );
   }
+  @HiveField(0)
+  final String title;
+  @HiveField(1)
+  final String subtitle;
+  @HiveField(2)
+  final String authors;
+  @HiveField(3)
+  final String publisher;
+  @HiveField(4)
+  final String isbn13;
+  @HiveField(5)
+  final String pages;
+  @HiveField(6)
+  final String year;
+  @HiveField(7)
+  final String rating;
+  @HiveField(8)
+  final String desc;
+  @HiveField(9)
+  final String price;
+  @HiveField(10)
+  final String image;
+  @HiveField(11)
+  final String url;
+  @HiveField(12)
+  final Map<String,String> pdf;
 
   static List<BookDetails> listFromMaps(List<dynamic> maps) {
-    return maps.map((map) => BookDetails.fromMap(map)).toList();
+    return maps.map((dynamic map) => BookDetails.fromMap(map)).toList();
   }
 }

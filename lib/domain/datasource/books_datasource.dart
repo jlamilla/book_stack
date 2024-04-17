@@ -1,6 +1,6 @@
-import 'package:antio_books/domain/entities/book.dart';
-import 'package:antio_books/domain/entities/book_details.dart';
-import 'package:antio_books/infraestructure/models/get_search_books_body.dart';
+import '../../infraestructure/models/get_search_books_body.dart';
+import '../entities/book.dart';
+import '../entities/book_details.dart';
 
 abstract class BooksDataSource {
   Future <List<Book>> getNewBooks();

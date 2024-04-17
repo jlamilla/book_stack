@@ -1,25 +1,24 @@
 import 'dart:async';
-import 'package:antio_books/domain/entities/book.dart';
+
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:animate_do/animate_do.dart';
+
+import '../../../domain/entities/book.dart';
 
 typedef SearchBooksCallback = Future<List<Book>> Function(String query);
 
 class SearchBookDelegate extends SearchDelegate<Book?> {
-  final SearchBooksCallback searchBooks;
-  List<Book> initialBooks;
-  StreamController<List<Book>> debouncedBooks = StreamController.broadcast();
-  StreamController<bool> isLoadingStream = StreamController.broadcast();
-
-  Timer? _debounceTimer;
-
   SearchBookDelegate({
     required this.searchBooks,
     required this.initialBooks,
-  }) : super(
-          searchFieldLabel: 'Search Books',
-        );
+  }) : super( searchFieldLabel: 'Search Books',);
+
+  final SearchBooksCallback searchBooks;
+  List<Book> initialBooks;
+  final StreamController<List<Book>> debouncedBooks = StreamController<List<Book>>.broadcast();
+  final StreamController<bool> isLoadingStream = StreamController<bool>.broadcast();
+  Timer? _debounceTimer;
 
   void clearStreams() {
     debouncedBooks.close();
@@ -28,10 +27,12 @@ class SearchBookDelegate extends SearchDelegate<Book?> {
   void _onQueryChanged(String query) {
     isLoadingStream.add(true);
 
-    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
 
-    _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
-      final books = await searchBooks(query);
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () async {
+      final List<Book> books = await searchBooks(query);
       initialBooks = books;
       debouncedBooks.add(books);
       isLoadingStream.add(false);
@@ -39,25 +40,27 @@ class SearchBookDelegate extends SearchDelegate<Book?> {
   }
 
   Widget buildResultsAndSuggestions() {
-    return StreamBuilder(
+    return StreamBuilder<List<Book>>(
       initialData: initialBooks,
       stream: debouncedBooks.stream,
-      builder: (context, snapshot) {
-        final textStyles = Theme.of(context).textTheme;
-        if(snapshot.data != null && snapshot.data!.isNotEmpty){
-          final books = snapshot.data;
+      builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
+        final TextTheme textStyles = Theme.of(context).textTheme;
+        if (snapshot.data != null && snapshot.data!.isNotEmpty) {
+          final List<Book>? books = snapshot.data;
           return ListView.builder(
             itemCount: books!.length,
-            itemBuilder: (context, index) => _BookItem(
+            itemBuilder: (BuildContext context, int index) => _BookItem(
               book: books[index],
-              onBookSelected: (context, Book book) {
+              onBookSelected: (BuildContext context, Book book) {
                 clearStreams();
                 close(context, book);
               },
             ),
           );
-        }else{
-          return Center(child: Text('No books found for your search', style: textStyles.titleLarge));
+        } else {
+          return Center(
+              child: Text('No books found for your search',
+                  style: textStyles.titleLarge));
         }
       },
     );
@@ -65,14 +68,14 @@ class SearchBookDelegate extends SearchDelegate<Book?> {
 
   @override
   List<Widget>? buildActions(BuildContext context) {
-    return [
-      StreamBuilder(
+    return <Widget>[
+      StreamBuilder<bool>(
         initialData: false,
         stream: isLoadingStream.stream,
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.data ?? false) {
             return SpinPerfect(
-              duration: const Duration(seconds: 20),
+              duration: const Duration(seconds: 2),
               spins: 10,
               infinite: true,
               child: IconButton(
@@ -113,24 +116,23 @@ class SearchBookDelegate extends SearchDelegate<Book?> {
 }
 
 class _BookItem extends StatelessWidget {
-  final Book book;
-  final Function onBookSelected;
-
   const _BookItem({required this.book, required this.onBookSelected});
+  final Book book;
+  final void Function( BuildContext, Book) onBookSelected;
 
   @override
   Widget build(BuildContext context) {
-    final textStyles = Theme.of(context).textTheme;
-    final size = MediaQuery.of(context).size;
+    final TextTheme textStyles = Theme.of(context).textTheme;
+    final Size size = MediaQuery.of(context).size;
 
     return GestureDetector(
       onTap: () {
-        onBookSelected(context, book);
+        onBookSelected( context, book);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Row(
-          children: [
+          children: <Widget>[
             // Image
             SizedBox(
               width: size.width * 0.2,
@@ -138,8 +140,10 @@ class _BookItem extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: FadeInImage(
-                  placeholder:  const AssetImage('assets/no-image.jpg',),
-                  image: CachedNetworkImageProvider( book.image ),
+                  placeholder: const AssetImage(
+                    'assets/no-image.jpg',
+                  ),
+                  image: CachedNetworkImageProvider(book.image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -150,12 +154,13 @@ class _BookItem extends StatelessWidget {
               width: size.width * 0.7,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   Text(book.title, style: textStyles.titleMedium),
-                  (book.subtitle.length > 100)
-                      ? Text('${book.subtitle.substring(0, 100)}...')
-                      : Text(book.subtitle),
-                  Text( book.price, style: textStyles.bodyMedium!.copyWith(color: Colors.yellow.shade900),
+                  if (book.subtitle.length > 100) Text('${book.subtitle.substring(0, 100)}...') else Text(book.subtitle),
+                  Text(
+                    book.price,
+                    style: textStyles.bodyMedium!
+                        .copyWith(color: Colors.yellow.shade900),
                   ),
                 ],
               ),

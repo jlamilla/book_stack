@@ -1,12 +1,13 @@
-import 'package:antio_books/config/injection_dependencies/injection_container.dart';
-import 'package:antio_books/config/provider/book_details_provider.dart';
-import 'package:antio_books/config/provider/search_books_provider.dart';
-import 'package:antio_books/config/provider/books_new_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
-List<SingleChildWidget> providersUseCase = [
-  ChangeNotifierProvider(create: (_) => BooksNewProvider(getBooksNewUseCase: sl()), lazy: false,),
-  ChangeNotifierProvider(create: (_) => SearchBooksProvider(getSearchBooksUseCase: sl()), lazy: false,),
-  ChangeNotifierProvider(create: (_) => BooksDetailsProvider(getBookDetailsUseCase: sl()), lazy: false,),
+import '../provider/book_details_provider.dart';
+import '../provider/books_new_provider.dart';
+import '../provider/search_books_provider.dart';
+import 'injection_container.dart';
+
+List<SingleChildWidget> providersUseCase = <SingleChildWidget>[
+  ChangeNotifierProvider<BooksNewProvider>(create: (_) => BooksNewProvider(getBooksNewUseCase: sl()), lazy: false,),
+  ChangeNotifierProvider<SearchBooksProvider>(create: (_) => SearchBooksProvider(getSearchBooksUseCase: sl()), lazy: false,),
+  ChangeNotifierProvider<BooksDetailsProvider> (create: (_) => BooksDetailsProvider(getBookDetailsUseCase: sl()), lazy: false,),
 ];

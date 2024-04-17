@@ -1,15 +1,17 @@
 
-import 'package:antio_books/config/errors/failures.dart';
-import 'package:antio_books/domain/entities/book_details.dart';
-import 'package:antio_books/domain/repositories/book_repository.dart';
-import 'package:antio_books/domain/use_cases/use_case.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../config/errors/failures.dart';
+import '../entities/book_details.dart';
+import '../repositories/book_repository.dart';
+import 'use_case.dart';
+
 class GetBookDetailsUseCase extends UseCase< BookDetails , String> {
-  BooksRepository booksRepository;
 
   GetBookDetailsUseCase({required this.booksRepository});
 
+  final BooksRepository booksRepository;
+
   @override
-  Future<Either<Failure, BookDetails>> call(params) async => await booksRepository.getBookDetails(params);
+  Future<Either<Failure, BookDetails>> call(String params) => booksRepository.getBookDetails(params);
 }

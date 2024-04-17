@@ -1,14 +1,14 @@
 abstract class Failure {}
 
 class BookSearchFailure extends Failure {
-  final String message;
   BookSearchFailure({required this.message});
+  final String message;
 }
 class BooksNewFailure extends Failure {
-  final String message;
   BooksNewFailure({required this.message});
+  final String message;
 }
 class BookDetailsFailure extends Failure {
-  final String message;
   BookDetailsFailure({required this.message});
+  final String message;
 }

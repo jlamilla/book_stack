@@ -1,9 +1,10 @@
 
-import 'package:antio_books/config/errors/failures.dart';
-import 'package:antio_books/domain/entities/book.dart';
-import 'package:antio_books/domain/entities/book_details.dart';
-import 'package:antio_books/infraestructure/models/get_search_books_body.dart';
 import 'package:dartz/dartz.dart';
+
+import '../../config/errors/failures.dart';
+import '../../infraestructure/models/get_search_books_body.dart';
+import '../entities/book.dart';
+import '../entities/book_details.dart';
 
 abstract class BooksRepository {
   Future<Either<Failure, List<Book>>> getBooks();

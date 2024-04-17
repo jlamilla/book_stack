@@ -1,31 +1,36 @@
 
 import 'dart:async';
 import 'dart:developer';
-import 'package:antio_books/config/constants/boxes.dart';
-import 'package:antio_books/domain/entities/book.dart';
-import 'package:antio_books/domain/use_cases/get_books_new_use_case.dart';
-import 'package:antio_books/domain/use_cases/use_case.dart';
+
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import '../../domain/entities/book.dart';
+import '../../domain/use_cases/get_books_new_use_case.dart';
+import '../../domain/use_cases/use_case.dart';
+import '../errors/failures.dart';
+import '../injection_dependencies/injection_container.dart';
 
 class BooksNewProvider extends ChangeNotifier {
-
-  List<Book> booksNews = [];
-  List<Book> historyBooks   = [];
-
-  final GetBooksNewUseCase getBooksNewUseCase;
 
   BooksNewProvider({required this.getBooksNewUseCase}) {
     getbooksNews();
     getHistoryBooks();
   }
 
+  List<Book> booksNews = <Book>[];
+  List<Book> historyBooks   = <Book>[];
+
+  final GetBooksNewUseCase getBooksNewUseCase;
+
   Future<void> getbooksNews() async {
-    final result = await getBooksNewUseCase.call(NoParams());
+    final Either<Failure, List<Book>> result = await getBooksNewUseCase.call(NoParams());
     result.fold(
-      (l) {
+      (Failure l) {
         log(l.toString());
       },
-      (r) {
+      (List<Book> r) {
         booksNews = r;
         notifyListeners();
       },
@@ -33,7 +38,7 @@ class BooksNewProvider extends ChangeNotifier {
   }
 
   void getHistoryBooks(){ 
-    historyBooks = boxBooks.values.toList();
+    historyBooks = sl<Box<Book>>().values.toList();
     notifyListeners();
   }
 }
