@@ -53,7 +53,7 @@ lib/
 
 ### Prerequisites
 
-- [Flutter 3.35.2](https://docs.flutter.dev/get-started/install)
+- [Flutter 3.35.2](https://docs.flutter.dev/install)
 - [Dart 3.9.0](https://dart.dev/get-dart)
 - Android SDK >= 36.0.0
 - [Android Studio](https://developer.android.com/studio) or [VS Code](https://code.visualstudio.com/)
