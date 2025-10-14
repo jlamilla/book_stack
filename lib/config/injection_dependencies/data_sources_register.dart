@@ -1,10 +1,7 @@
+import 'package:book_stack/domain/datasource/books_datasource.dart';
+import 'package:book_stack/infraestructure/datasources/remote/books_datasource_impl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/datasource/books_datasource.dart';
-import '../../infraestructure/datasources/books_datasource_impl.dart';
-import 'injection_container.dart';
-
-void registerDataSources() {
-  sl.registerLazySingleton<BooksDataSource>(
-    () => BooksDataSourceImpl(),
-  );
-}
+final Provider<BooksDataSource> booksDataSourceProvider = Provider<BooksDataSource>((Ref ref) {
+  return BooksDataSourceImpl();
+});

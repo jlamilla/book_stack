@@ -1,9 +1,12 @@
+import 'package:book_stack/app.dart';
 import 'package:flutter/material.dart';
-
-import 'app.dart';
-import 'config/injection_dependencies/injection_container.dart' as di;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
-  await di.init();
-  runApp(const AntioBooksApp());
-} 
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const ProviderScope(
+      child: BookStackApp(),
+    ),
+  );
+}

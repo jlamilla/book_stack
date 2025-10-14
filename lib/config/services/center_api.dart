@@ -1,8 +1,7 @@
 import 'dart:convert';
 
+import 'package:book_stack/infraestructure/models/server_response.dart';
 import 'package:http/http.dart' as http;
-
-import '../../infraestructure/models/server_response.dart';
 
 class CenterApi {
   static const String connectionError = 'Error en la conexión';
@@ -28,12 +27,12 @@ class CenterApi {
         return ServerResponse(
           isSuccess: false,
           message: 'Error',
-          result: <dynamic>[],
+          result: const <dynamic>[],
           statusCode: response.statusCode,
         );
       }
     } catch (error) {
-      return ServerResponse(
+      return const ServerResponse(
         isSuccess: false,
         message: connectionError,
         result: <dynamic>[],
