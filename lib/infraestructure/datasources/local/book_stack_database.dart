@@ -16,7 +16,7 @@ class BookStackDatabase extends _$BookStackDatabase {
   BookStackDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 1;
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
