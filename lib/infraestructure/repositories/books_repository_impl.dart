@@ -1,12 +1,12 @@
+import 'package:book_stack/config/errors/exceptions.dart';
+import 'package:book_stack/config/errors/failures.dart';
+import 'package:book_stack/domain/datasource/books_datasource.dart';
+import 'package:book_stack/domain/entities/book/book.dart';
+import 'package:book_stack/domain/entities/book/book_details.dart';
+import 'package:book_stack/domain/repositories/book_repository.dart';
+import 'package:book_stack/infraestructure/models/books/request/get_search_books_request.dart';
+import 'package:book_stack/infraestructure/models/books/response/search_books_response.dart';
 import 'package:dartz/dartz.dart';
-
-import '../../config/errors/exceptions.dart';
-import '../../config/errors/failures.dart';
-import '../../domain/datasource/books_datasource.dart';
-import '../../domain/entities/book.dart';
-import '../../domain/entities/book_details.dart';
-import '../../domain/repositories/book_repository.dart';
-import '../models/get_search_books_body.dart';
 
 class BooksRepositoryImpl implements BooksRepository {
 
@@ -33,11 +33,12 @@ class BooksRepositoryImpl implements BooksRepository {
   }
 
   @override
-  Future<Either<Failure, List<Book>>> getSearchBooks(GetSearchBooksBody params) async {
+  Future<Either<Failure, SearchBooksResponse>> getSearchBooks(GetSearchBooksRequest params) async {
     try {
-      return Right<Failure, List<Book>>(await booksDatasource.getSearchBooks(params));
+      final SearchBooksResponse response = await booksDatasource.getSearchBooks(params);
+      return Right<Failure, SearchBooksResponse>(response);
     } on BookSearchException catch (e) {
-      return Left<Failure, List<Book>>(BookSearchFailure(message: e.message));
+      return Left<Failure, SearchBooksResponse>(BookSearchFailure(message: e.message));
     }
   }
 

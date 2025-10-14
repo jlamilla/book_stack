@@ -1,18 +1,17 @@
 
+import 'package:book_stack/config/errors/failures.dart';
+import 'package:book_stack/domain/repositories/book_repository.dart';
+import 'package:book_stack/domain/use_cases/use_case.dart';
+import 'package:book_stack/infraestructure/models/books/request/get_search_books_request.dart';
+import 'package:book_stack/infraestructure/models/books/response/search_books_response.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../config/errors/failures.dart';
-import '../../infraestructure/models/get_search_books_body.dart';
-import '../entities/book.dart';
-import '../repositories/book_repository.dart';
-import 'use_case.dart';
-
-class GetSearchBooksUseCase extends UseCase<List<Book>, GetSearchBooksBody> {
+class GetSearchBooksUseCase extends UseCase<SearchBooksResponse, GetSearchBooksRequest> {
 
   GetSearchBooksUseCase({required this.booksRepository});
 
   BooksRepository booksRepository;
 
   @override
-  Future<Either<Failure, List<Book>>> call(GetSearchBooksBody params) => booksRepository.getSearchBooks(params);
+  Future<Either<Failure, SearchBooksResponse>> call(GetSearchBooksRequest params) => booksRepository.getSearchBooks(params);
 }
