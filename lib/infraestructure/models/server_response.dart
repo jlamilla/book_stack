@@ -1,5 +1,11 @@
-class ServerResponse {
-  ServerResponse({
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'server_response.g.dart';
+
+@JsonSerializable()
+class ServerResponse extends Equatable {
+  const ServerResponse({
     this.message,
     this.result,
     this.data,
@@ -7,28 +13,29 @@ class ServerResponse {
     required this.statusCode,
   });
 
-  factory ServerResponse.fromJson(Map<String, dynamic> json) => ServerResponse(
-        isSuccess: json['is_success'],
-        result: json['result'],
-        message: json['message'],
-        statusCode: json['status_code'],
-        data: json['data'],
-      );
+  factory ServerResponse.fromJson(Map<String, dynamic> json) => _$ServerResponseFromJson(json);
 
-  bool isSuccess;
-  dynamic result;
-  String? message;
-  int statusCode;
-  bool? data;
-  dynamic get response {
-    return result;
-  }
+  @JsonKey(name: 'is_success')
+  final bool isSuccess;
+  @JsonKey(name: 'result')
+  final dynamic result;
+  @JsonKey(name: 'message')
+  final String? message;
+  @JsonKey(name: 'status_code')
+  final int statusCode;
+  @JsonKey(name: 'data')
+  final bool? data;
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'is_success': isSuccess,
-        'result': response,
-        'message': message,
-        'status_code': statusCode,
-        'data': data
-      };
+  dynamic get response => result;
+
+  Map<String, dynamic> toJson() => _$ServerResponseToJson(this);
+
+  @override
+  List<Object?> get props => <Object?>[
+    isSuccess,
+    result,
+    message,
+    statusCode,
+    data,
+  ];
 }
