@@ -100,9 +100,18 @@ class BookDetailsNotifier extends Notifier<BookDetailsState> {
   }
 
   Future<void> openPdfUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      BookStackLogger.error('No se pudo abrir el enlace: $url');
+    if (url.isEmpty) {
+      BookStackLogger.error('URL de PDF vacía');
+      return;
+    }
+    try {
+      final Uri uri = Uri.parse(url);
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        BookStackLogger.error('No se pudo abrir el enlace: $url');
+      }
+    } catch (e) {
+      BookStackLogger.error('URL inválida: $url');
+      return;
     }
   }
 }

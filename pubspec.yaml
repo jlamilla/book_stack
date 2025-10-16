@@ -10,7 +10,10 @@ environment:
 dependencies:
   animate_do: ^4.2.0
   book_stack_design_system:
-    path: ../book_stack_design_system
+    #path: ../book_stack_design_system
+    git:
+      url: https://github.com/jlamilla/book_stack_design_system
+      ref: main
   cached_network_image: ^3.4.1
   card_swiper: ^3.0.1
   connectivity_plus: ^7.0.0

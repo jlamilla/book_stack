@@ -84,10 +84,12 @@ packages:
   book_stack_design_system:
     dependency: "direct main"
     description:
-      path: "../book_stack_design_system"
-      relative: true
-    source: path
-    version: "0.1.0"
+      path: "."
+      ref: main
+      resolved-ref: "76d5380a451364be469869b0c2cff61ed07e8548"
+      url: "https://github.com/jlamilla/book_stack_design_system"
+    source: git
+    version: "0.2.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -807,6 +809,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.16"
+  lcov_parser:
+    dependency: transitive
+    description:
+      name: lcov_parser
+      sha256: b2a4225376e47630dbe71217bcf2296e1d79b50e6c20781c0304094b8be05968
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   leak_tracker:
     dependency: transitive
     description:
